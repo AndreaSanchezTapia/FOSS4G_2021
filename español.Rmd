@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(xaringanthemer)
 style_duo_accent(
   primary_color = "#181818",
-  secondary_color = "#A70000",
+  secondary_color = "#88398a",
   colors = c(
     red = "#A70000",
     purple = "#88398a",
@@ -60,17 +60,19 @@ use_logo(
 <br>
 <br>
 <center>
-## Creando flujos de trabajo abiertos y reproducibles para el modelamiento de nichos ecológicos
+
+# Creando flujos de trabajo abiertos y reproducibles para el modelamiento de nichos ecológicos
 
 ### Andrea Sánchez-Tapia, Sara Ribeiro Mortara, Felipe Sodré Barros
+
+### FOSS4G 2021
 </center>
 <br>
-<br>
 
+.center[
+__[Slides in English](https://andreasancheztapia.github.io/FOSS4G_2021/english#1)__
+]
 
-```{r, out.width= 150}
-knitr::include_graphics("figs/logo_liibre.png")
-```
 
 ---
 background-image: url("figs/logo_jbrj.png")
