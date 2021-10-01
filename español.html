@@ -4,7 +4,7 @@
     <title>español.knit</title>
     <meta charset="utf-8" />
     <meta name="author" content="Andrea Sánchez-Tapia" />
-    <meta name="date" content="2021-09-30" />
+    <meta name="date" content="2021-10-01" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
     <link rel="stylesheet" href="font.css" type="text/css" />
@@ -66,13 +66,13 @@ bottom:1em;left:88%;
 
 ### Andrea Sánchez-Tapia, Sara Ribeiro Mortara, Felipe Sodré Barros
 
-### FOSS4G 2021
+### FOSS4G Buenos Aires 2021
 &lt;/center&gt;
 &lt;br&gt;
 
-.center[
+
 __[Slides in English](https://andreasancheztapia.github.io/FOSS4G_2021/english#1)__
-]
+
 
 
 ---
@@ -84,52 +84,184 @@ background-size: 100px
 ]
 
 .right-column[
-.left[ #### Laboratorio de computación científica y geoprocesamiento del Jardín Botánico de Río de Janeiro]
+#### Núcleo de Computación Científica y Geoprocesamiento - Jardín Botánico de Río de Janeiro
 #### ¡liibre! Laboratorio Independiente de Informática de la Biodiversidad y Reproducibilidad en Ecología
 
 
-+ Informática de la biodiversidad, MNE, ciencia abierta, reproducibilidad
 + Flujos de trabajo científicos basados en R para descarga y limpieza de datos, verificación taxonómica
-+ Soporte a proyectos de investigación que utilizan informática de la biodiversidad (e.g., CNCFlora - autoridad UICN para la Flora de Brasil)
++ Informática de la biodiversidad, MNE, ciencia abierta, reproducibilidad
++ Soporte a proyectos de investigación que utilizan datos sobre biodiversidad (e.g., CNCFlora - autoridad UICN para la Flora de Brasil)
 ]
 
-
 ---
 
-Reproducibility:
-"data and code being available to fully rerun the analysis" -- _The Turing Way_
+### Modelos de nicho ecológico o de distribución potencial de especies (ENM, SDM)
+
++ __Aprendizaje estadístico__ aplicado a la preducción de áreas potencialmente adecuadas para la presencia de especies
+--
+
+  + Datos de ocurrencia de las especies (bases de dados de colecciones)
+--
+
+  + Variables predictoras ambientales (Worldclim, sensoriamiento remoto)
+--
+
+  + Diferentes algoritmos (GLM, SVM, Bosques aleatorios, árboles de clasificación, GBM)
+--
+
+  + Desempeño de modelos (partición de los datos en conjunto de entrenamiento y test + métricas de desempeño)
+--
+
++ Primeras implementaciones: código oculto, uso interactivo con el ratón (_"point-and-click"_)
 
 ---
+background-image: url("https://www.r-project.org/Rlogo.png")
+background-position: 4% 4%
+background-size: 200px
 
-+ Version control
-+ Reproducible computational environments:
-many levels: package version awareness, controllers: Renv, containers: Docker
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
 
----
-## why build an ENM package?
+- Lenguaje de programación en estadística
+--
 
-+ Usabilidad
-+ Calidad
-+ Estilo
-+ Documentación
-+ Qué gap llena?
-+ En qué mejora flujos previos?
+- Software libre, código abierto, _lingua franca_ en Ecología
+--
 
-necesitábamos un flujo de trabajo
-
----
-## ¿por qué crear un paquete de MNE?
-
-- Comenzamos con un conjunto de scripts de específico del proyecto para ejecutar MNE para especies en el Bosque Atlántico brasileño
-- Otros proyectos: estructura similar pero flexibilidad necesaria según la pregunta de investigación
-- Varias opciones dentro de R
+- Varias opciones para ENM/SDM dentro de R
+--
 
   - SIG con __raster__, __sp__, __maps__, __rgdal__, __sf__
+--
+
   - Paquetes reconocidos como __dismo__ (Hijmans et al 2017), __BIOMOD2__ (Thuiller et al 2007)
-  - Otros paquetes: **ENMeval** (Muscarella et al 2014), **sdm** (Naimi &amp; Araujo 2016), **spThin** (Aiello-Lammens et al 2015), **zoon** (Golding et al. 2018), **wallace** (Kass et al 2018), **kuenm** (Cobos et al 2019), **occCite** (Lowens 2020)
+--
+
+  - Paquetes recientes: **ENMeval** (Muscarella et al 2014), **sdm** (Naimi &amp; Araujo 2016), **spThin** (Aiello-Lammens et al 2015), **zoon** (Golding et al. 2018), **wallace** (Kass et al 2018), **kuenm** (Cobos et al 2019), **occCite** (Lowens 2020)
+--
+
+#### Dificultad con escalabilidad, repetición de código, documentación de decisiones... .purple[no reproducilibidad]
+
+---
+background-image: url("https://the-turing-way.netlify.app/_static/logo.jpg")
+background-position: 4% 4%
+background-size: 150px
+class: middle
+
++ [Investigación abierta](https://the-turing-way.netlify.app/reproducible-research/open.html): reproducible, transparente, reutilizable, colaborativa, responsable, accesible a la sociedad
++ [Reproducibilidad](https://the-turing-way.netlify.app/reproducible-research/reproducible-research.html):
+datos y código disponibles para volver a rodar los análisis
+
+---
+background-image: url("figs/modleR.png")
+background-position: 4% 4%
+background-size: 150px
+
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+
+- Un .purple[flujo de trabajo] desarrollado para __integrar y automatizar__ algunos de los pasos comunes en el modelamiento de nichos ecológicos
+--
+
+- Cuatro pasos:
+--
+
+  + `setup_sdmdata()`: configuración de datos, limpieza, partición, selección de pseudoausencias
+--
+
+  + `do_any()` and `do_many()`: ajuste, proyección y evaluación del modelo
+--
+
+  + `final_model()`: uniendo particiones
+--
+
+  + `ensemble_model()`: consenso entre algoritmos
+
+---
+background-image: url("figs/modleR.png")
+background-position: 4% 4%
+background-size: 150px
+
+.right[
+## un flujo de trabajo en cuatro pasos
+
+&lt;img src="figs/WORKFLOW.png" title="Esquema del flujo de trabajo. el primer paso limpia y particiona los datos en conjunto de entrenamiento y test, muestrea pseudoausencias y controla la correlación de las variables explicativas. En el segundo paso cada algoritmo genera un modelo por partición, con variación entre ellas debido a la diferencia en los conjuntos de entrenamiento y test. En el tercer paso final_model() junta esas particiones de diferentes maneras, generando un modelo por algoritmo. El cuarto paso analiza el consenso entre algoritmos, en el paso que denominamos 'ensemble modeling', para obtener un único modelo por especie" alt="Esquema del flujo de trabajo. el primer paso limpia y particiona los datos en conjunto de entrenamiento y test, muestrea pseudoausencias y controla la correlación de las variables explicativas. En el segundo paso cada algoritmo genera un modelo por partición, con variación entre ellas debido a la diferencia en los conjuntos de entrenamiento y test. En el tercer paso final_model() junta esas particiones de diferentes maneras, generando un modelo por algoritmo. El cuarto paso analiza el consenso entre algoritmos, en el paso que denominamos 'ensemble modeling', para obtener un único modelo por especie" width="1000" /&gt;
+]
+
+---
+## 1. `setup_sdmdata()`: preparación de datos
+
+Preparación y limpieza de datos debe realizarse previamente
+
+- Limpieza de datos: datos duplicados, NA y una ocurrencia por píxel
+- Diseño experimental: *bootstrap*, validación cruzada
+- Muestreo de pseudo-ausencias
+- Control de correlación de variables hasta un valor definido por el usuarie (p. ej., 0,8)
+
+---
+## muestreo de pseudo-ausencias
+
+&lt;img src="figs/fig04_buffer.png" width="800" style="display: block; margin: auto;" /&gt;
+
+---
+## 2. `do_(m)any()`: ajuste y proyección del modelo
+
+- `do_any()` para un algoritmo y partición (ej. `algo = "maxent"`)
+- `do_many()` llama a `do_any()` para ajustar múltiples algoritmos (ej. `bioclim = TRUE`, `maxent = TRUE`)
+- Parametrización
+- Algoritmos: dismo, maxnet, GLM, SVM, bosques aleatorios, boosted regression trees (BRT)
+- Proyección a diferentes conjuntos de datos (en el tiempo o el espacio)
+- Devuelve una tabla con estadísticas de desempeño `-&gt;` TSS, AUC, pROC, FNR, Jaccard
 
 
-__Necesitábamos un flujo de trabajo en lugar de paquetes de R independientes__
+---
+## 2. `do_(m)any()`: ajuste y proyección del modelo
+
+&lt;img src="figs/modleR/rf_cont_Abarema_langsdorffii_1_1.png" width="300" /&gt;&lt;img src="figs/modleR/rf_cont_Abarema_langsdorffii_1_2.png" width="300" /&gt;&lt;img src="figs/modleR/rf_cont_Abarema_langsdorffii_1_3.png" width="300" /&gt;
+
+_Abarema langsdorffii_, tres particiones, bosques aleatorios
+
+---
+## 3. `final_model()`: un modelo por algoritmo por especie
+
+- lo básico: una medida de tendencia central e incertidumbre entre particiones
+- ¿qué modelos unir? (el modelo continuo sin procesar, el binario)
+- algunas operaciones adicionales: consenso entre modelos binarios
+- incertidumbre: rango (max-min) entre particiones
+
+---
+## 3. `final_model()`: un modelo por algoritmo por especie
+
+
+.center[
+&lt;img src="figs/fig05_finalmodel.png" width="400" /&gt;
+]
+
+---
+## 3. `final_model()`: un modelo por algoritmo por especie
+
+
+&lt;img src="figs/modleR/Abarema_langsdorffii_rf_raw_mean.png" width="300" /&gt;&lt;img src="figs/modleR/Abarema_langsdorffii_rf_bin_consensus.png" width="300" /&gt;&lt;img src="figs/modleR/Abarema_langsdorffii_rf_raw_uncertainty.png" width="300" /&gt;
+
+Media de los modelos brutos
+Consenso de los modelos binarios
+Incertidumbre (rango)
+
+---
+## 4. `ensemble_model()` - consenso entre algoritmos
+
+- Media entre `final_models()`
+- Algoritmo de mejor desempeño
+- PCA entre algoritmos
+- Métricas de incertidumbre
+- Los modelos *ensemble* no necesariamente funcionan mejor que los algoritmos individuales (Zhu &amp; Peterson 2017)
++ Evaluar el desempeño de diferentes métodos de consenso (WIP)
+
 
 ---
 ## estructura de carpetas y portabilidad
@@ -154,6 +286,8 @@ __Necesitábamos un flujo de trabajo en lugar de paquetes de R independientes__
 - Se puede entrar y salir del flujo de trabajo en cualquier paso
 - Paralelización y uso en marcos computacionales de alto procesamiento / alto rendimiento (HPC / HTC)
 
+&lt;img src="figs/sdmdata_table.png" width="828" /&gt;
+
 ---
 ## reproducibilidad
 
@@ -166,6 +300,9 @@ __Necesitábamos un flujo de trabajo en lugar de paquetes de R independientes__
  - información de sesión
  - paquetes utilizados y su versión
 
+
+&lt;img src="figs/metadata.png" width="600" /&gt;
+
 ---
 ## interoperabilidad
 
@@ -174,139 +311,7 @@ No creamos nuevas clases o métodos: comunicación con otros paquetes de R
 &lt;img src="figs/xkcd_standards.png" title="cómic de xkcd: título: ¿cómo proliferan los estándares? subtítulo: (ver: cargadores de corriente alternativa A/C, codificación de caracteres, mensajería instantánea, etc.) Primer cuadro: Situación: Hay 14 estándares compitiendo. Segundo cuadro: dos figuras humanas. Persona 1: '¿14? ¡Ridículo! Necesitamos desarrollar un estándar universal que cubra todos los casos de uso' Persona 2: '¡sí!'. Tercer cuadro: Pronto: Situación: Hay 15 estándares compitiendo" alt="cómic de xkcd: título: ¿cómo proliferan los estándares? subtítulo: (ver: cargadores de corriente alternativa A/C, codificación de caracteres, mensajería instantánea, etc.) Primer cuadro: Situación: Hay 14 estándares compitiendo. Segundo cuadro: dos figuras humanas. Persona 1: '¿14? ¡Ridículo! Necesitamos desarrollar un estándar universal que cubra todos los casos de uso' Persona 2: '¡sí!'. Tercer cuadro: Pronto: Situación: Hay 15 estándares compitiendo" width="719" /&gt;
 
 ---
-## modleR
 
-Un flujo de trabajo desarrollado para automatizar algunos de los pasos comunes en el modelamiento de nichos ecológicos
-
-&lt;img src="figs/modleR.png" width="150" /&gt;
-
----
-## un flujo de trabajo en cuatro pasos
-
-+ `setup_sdmdata()`: configuración de datos, limpieza, partición, selección de pseudoausencias
-+ `do_any()` and `do_many()`: ajuste, proyección y evaluación del modelo
-+ `final_model()`: uniendo particiones
-+ `ensemble_model()`: consenso entre algoritmos
-
----
-## un flujo de trabajo en cuatro pasos
-
-.center[
-&lt;img src="figs/WORKFLOW.png" title="Esquema del flujo de trabajo. el primer paso limpia y particiona los datos en conjunto de entrenamiento y test, muestrea pseudoausencias y controla la correlación de las variables explicativas. En el segundo paso cada algoritmo genera un modelo por partición, con variación entre ellas debido a la diferencia en los conjuntos de entrenamiento y test. En el tercer paso final_model() junta esas particiones de diferentes maneras, generando un modelo por algoritmo. El cuarto paso analiza el consenso entre algoritmos, en el paso que denominamos 'ensemble modeling', para obtener un único modelo por especie" alt="Esquema del flujo de trabajo. el primer paso limpia y particiona los datos en conjunto de entrenamiento y test, muestrea pseudoausencias y controla la correlación de las variables explicativas. En el segundo paso cada algoritmo genera un modelo por partición, con variación entre ellas debido a la diferencia en los conjuntos de entrenamiento y test. En el tercer paso final_model() junta esas particiones de diferentes maneras, generando un modelo por algoritmo. El cuarto paso analiza el consenso entre algoritmos, en el paso que denominamos 'ensemble modeling', para obtener un único modelo por especie" width="1000" /&gt;
-]
-
----
-## paso 1 `setup_sdmdata()`: preparación de datos
-
-Preparación y limpieza de datos debe realizarse previamente
-
-- Comprobaciones de limpieza de datos opcionales: datos duplicados, NA y una ocurrencia por píxel
-- Diseño experimental: *bootstrap*, validación cruzada
-- Muestreo de pseudo-ausencia
-- Control de correlación de variables hasta un valor definido por el usuario (p. ej., 0,8)
-
----
-## muestreo de pseudo-ausencias
-
-&lt;img src="figs/fig04_buffer.png" width="800" style="display: block; margin: auto;" /&gt;
-
----
-## muestreo de pseudo-ausencias
-
-&lt;img src="figs/buffer/1_no_buffer.png" width="200" /&gt;&lt;img src="figs/buffer/meandist_and_mindist.png" width="200" /&gt;&lt;img src="figs/buffer/usr_shape_and_mindist.png" width="200" /&gt;
-
-+ sin búfer
-+ búfer de distancia media y filtro de distancia euclidiana
-+ búfer definido por le usuarie (M) y filtro de distancia euclidiana
-
-
----
-## `setup_sdmdata()` output
-
-Al final de la configuración de datos:
-
-- metadatos e información de sesión
-- crea data.frame sdmdata.csv que se utilizará en el siguiente paso
-
-
-&lt;img src="figs/sdmdata_table.png" width="600" /&gt;&lt;img src="figs/metadata.png" width="600" /&gt;
-
----
-## paso 2. `do_(m)any()`: ajuste y proyección del modelo
-
-- `do_any()` para un algoritmo y partición (ej. `algo = "maxent"`)
-- `do_many()` llama a `do_any()` para ajustar múltiples algoritmos (ej. `bioclim = TRUE`, `maxent = TRUE`)
-- Parametrización
-- Se puede aplicar una máscara definida por le usuarie
-- Proyección a diferentes conjuntos de datos (en el tiempo o el espacio)
-- Devuelve una tabla con estadísticas de desempeño --&gt; TSS, AUC, pROC, FNR, Jaccard
-
----
-## `do_(m)any()`: model fitting and projection
-
-Algoritmos actuales:
-
-- bioclim, mahalanobis distance, maxent en el paquete **dismo**
-- Boosted Regression Trees(BRT) implementados por la función `gbm.step()` del paquete **dismo**
-- maxent del paquete **maxnet**
-- GLM de base R, implementado con un enfoque de selección paso a paso
-- Support Vector Machines (SVM) de los paquetes **kernlab** y **e1071**
-- Random Forest del paquete **randomForest**
-
----
-## salida de `do_(m)any()`
-
-Al final de la etapa de ajuste del modelo:
-
-- Salidas en el disco duro: .tif, .png para cada partición
-- data.frame de evaluación con las estadísticas de desempeño en diferentes umbrales
-- Metadatos e información de sesión
-
----
-## salida de `do_(m)any()` (un modelo ajustado por partición)
-
-&lt;img src="figs/modleR/rf_cont_Abarema_langsdorffii_1_1.png" width="300" /&gt;&lt;img src="figs/modleR/rf_cont_Abarema_langsdorffii_1_2.png" width="300" /&gt;&lt;img src="figs/modleR/rf_cont_Abarema_langsdorffii_1_3.png" width="300" /&gt;
-
-_Abarema langsdorffii_, tres particiones, bosques aleatorios
-
----
-## paso 3. `final_model()`: un modelo por algoritmo por especie
-
-- lo básico: una medida de tendencia central e incertidumbre entre particiones
-- ¿qué modelos unir? (el modelo continuo sin procesar, el binario)
-- algunas operaciones adicionales: consenso entre modelos binarios
-- incertidumbre: rango (max-min) entre particiones
-
----
-## paso 3. `final_model()`: un modelo por algoritmo por especie
-
-
-.center[
-&lt;img src="figs/fig05_finalmodel.png" width="400" /&gt;
-]
-
----
-## paso 3. `final_model()`: un modelo por algoritmo por especie
-
-
-&lt;img src="figs/modleR/Abarema_langsdorffii_rf_raw_mean.png" width="300" /&gt;&lt;img src="figs/modleR/Abarema_langsdorffii_rf_bin_consensus.png" width="300" /&gt;&lt;img src="figs/modleR/Abarema_langsdorffii_rf_raw_uncertainty.png" width="300" /&gt;
-
-Media de los modelos brutos
-Consenso de los modelos binarios
-Incertidumbre (rango)
-
----
-## paso 4. `ensemble_model()` - consenso entre algoritmos
-
-- Media entre `final_models()`
-- Consenso
-- Algoritmo de mejor desempeño
-- PCA entre algoritmos
-- Métricas de incertidumbre
-- Los modelos *ensemble* no necesariamente funcionan mejor que los algoritmos individuales (Zhu &amp; Peterson 2017)
-+ Evaluar el desempeño de diferentes métodos de consenso (WIP)
-
----
 ## final remarks
 
 - La reproducibilidad debería impulsar cualquier flujo de trabalho de MNE
@@ -314,13 +319,21 @@ Incertidumbre (rango)
 - Cualquier flujo de trabajo MNE debe adaptarse fácilmente a HPC
 - La flexibilidad para empezar y salir en cualquier paso es fundamental para garantir una evaluación sólida de los ENM
  - No es un problema tener un paquete más si se integra con otros paquetes
+
+---
+## final remarks
+
++ Invest in:
+  + learning script-based applications (programming)
+  + version control (git)
++ Use tools for environment reproducibility (__Renv__ package, Docker containers)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
 "highlightLines": true,
-"countIncrementalSlides": "none",
+"countIncrementalSlides": false,
 "seal": false,
 "ratio": "16:9"
 });
