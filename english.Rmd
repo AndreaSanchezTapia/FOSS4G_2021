@@ -103,22 +103,43 @@ knitr::include_graphics("figs/mari.jpeg")
 ]
 
 ---
+background-image: url("https://the-turing-way.netlify.app/_static/logo.jpg")
+background-position: 4% 4%
+background-size: 200px
 
+
+.right[
+### https://the-turing-way.netlify.app/welcome
+]
+
+<br>
+<br>
+<br>
+<br>
++ [Open research](https://the-turing-way.netlify.app/reproducible-research/open.html): reproducible, transparent, reusable, collaborative, accountable, accessible to society
++ [Reproducibility](https://the-turing-way.netlify.app/reproducible-research/reproducible-research.html):
+data and code being available to fully rerun the analysis
+
+---
 ### Ecological niche modeling or species distribution modeling (ENM, SDM)
 
 + __Stastistical learning__ applied to the prediction of areas potentially suitable for the presence of a species
+
 --
   + Species occurrence data (collection data bases, GBIF)
+
 --
   + Environmental predictor variables  (Worldclim, remote sensing)
+
 --
 
   + Diferent algorithms (GLM, SVM, random forests, classification trees, GBM)
+
 --
 
   + Model performance (data partition into training and test data + performance metrics)
---
 
+--
 
 + Early implementations: hidden code ("black boxes"), point-and-click applications
 
@@ -153,17 +174,6 @@ background-size: 200px
 #### Difficulties with scalability, code repetition, decision documentation... .purple[non-reproducible]
 
 ---
-background-image: url("https://the-turing-way.netlify.app/_static/logo.jpg")
-background-position: 4% 4%
-background-size: 200px
-class: middle
-
-+ [Open research](https://the-turing-way.netlify.app/reproducible-research/open.html): reproducible, transparent, reusable, collaborative, accountable, accessible to society
-+ [Reproducibility](https://the-turing-way.netlify.app/reproducible-research/reproducible-research.html):
-data and code being available to fully rerun the analysis
-
-
----
 background-image: url("figs/modleR.png")
 background-position: 4% 4%
 background-size: 150px
@@ -174,6 +184,8 @@ background-size: 150px
 <br>
 <br>
 
+- https://model-r.github.io/modleR/index.html
+--
 
 
 A .purple[workflow] developed to __integrate and automatize__ some of the common steps in ecological niche modeling
@@ -210,28 +222,44 @@ knitr::include_graphics("figs/WORKFLOW.png")
 ---
 ## 1. `setup_sdmdata()`: data preparation
 
-Data preparation and cleaning should be performed previously
 
-+ Data cleaning: exact duplicates, NAs and one occurrence per pixel
++ Data cleaning: exact duplicates, NAs and one occurrence per pixel (this does not exclude the need for previous careful data cleaning!)
+
+--
+
 + Experimental design: bootstrap, cross-validation
+
+--
+
 + Pseudo-absence sampling
+
+--
+
 + Control of variable correlation up to a user-defined value (e.g., 0.8)
 
----
-## pseudoabsence sampling
-
-```{r, out.width=800, fig.align="center"}
-knitr::include_graphics("figs/fig04_buffer.png")
-```
 
 ---
 ## 2. `do_(m)any()`: model fitting and projection
 
 + `do_any()` for one algorithm and partition (ex. `algo = "maxent"`)
+
+--
+
 + `do_many()` calls `do_any()` to fit multiple algorithms (ex: `bioclim = TRUE`, `maxent = TRUE`)
+
+--
+
 + Parametrization
-- Algoritmos: dismo, maxnet, GLM, SVM, bosques aleatorios, boosted regression trees (BRT)
+--
+
+- Algorithms: dismo, maxnet, GLM, SVM, bosques aleatorios, boosted regression trees (BRT)
+
+--
+
 + Projection to different datasets (in time or space)
+
+--
+
 + Returns table with performance statistics -> TSS, AUC, pROC, FNR, Jaccard...
 
 ---
@@ -249,18 +277,18 @@ _Abarema langsdorffii_, three partitions, randomForests
 ## 3. `final_model()`: a model per algorithm per species
 
 + The basics: a central tendency measure and uncertainty between partitions
+
+--
+
 + Which models to join? (the raw continuous model, the binary)
+
+--
+
 + Some additional operations: consensus between binary models
+--
+
 + Uncertainty: range (max - min) between partitions
 
----
-## 3. `final_model()`: a model per algorithm per species
-
-.center[
-```{r, out.width=400}
-knitr::include_graphics("figs/fig05_finalmodel.png")
-```
-]
 
 ---
 ## 3. `final_model()`: a model per algorithm per species
@@ -271,19 +299,37 @@ knitr::include_graphics("figs/modleR/Abarema_langsdorffii_rf_bin_consensus.png")
 knitr::include_graphics("figs/modleR/Abarema_langsdorffii_rf_raw_uncertainty.png")
 ```
 
-Raw mean
-Binary consensus
-Uncertainty (range)
+1. Raw mean
+2. Binary consensus
+3. Uncertainty (range)
 
 ---
 ## 4. `ensemble_model()` - algorithmic consensus
 
 + Mean between final models
+
+--
+
 + Consensus
+
+--
+
 + Best-performing algorithm
+
+--
+
 + PCA between algorithms
+
+--
+
 + Range uncertainty metrics
+
+--
+
 + Ensemble models do not necessarily perform better than individual algorithms (Zhu & Peterson 2017)
+
+--
+
 + Evaluate different ensemble model performance (WIP)
 
 
@@ -291,10 +337,15 @@ Uncertainty (range)
 ## folder structure and portability
 
 .pull-left[
+
 + A single working directory per project
+
 + Different steps: different subfolders
+
 + A consistent subfolder structure
+
 + Relative rather than absolute paths and no `setwd()`
+
 ]
 
 .pull-right[
@@ -307,29 +358,39 @@ knitr::include_graphics("figs/fig03_folder.png")
 ## modularity
 
 + Each step saves its output
+
+--
+
 + The next step reads the previous output
-+ Using HD space rather than RAM
-+ The user may enter and exit the workflow at any step
-+ Parallelization and use in high performance/high throughput computational frameworks (HPC/HTC)
 
-```{r}
-knitr::include_graphics("figs/sdmdata_table.png")
-```
+--
 
----
-## reproducibility
++ Using HD space rather than RAM:
 
-```{r, out.width=600}
-knitr::include_graphics("figs/feng.png")
-```
+--
+
+  + The user may enter and exit the workflow at any step
+--
+
+  + Parallelization and use in high performance/high throughput computational frameworks (HPC/HTC)
+
+
 
 ---
 ## thorough metadata recording
 
-+ metadata: parametrization options
-+ session information
-+ environment: packages used and their version
++ Metadata: parametrization options
 
+--
+
++ Session information
+
+--
+
++ Environment: packages used and their version
+
+
+--
 
 ```{r, out.width=600}
 knitr::include_graphics("figs/metadata.png")
@@ -345,18 +406,51 @@ knitr::include_graphics("figs/xkcd_standards.png")
 ```
 
 ---
-## final remarks
+## reproducibility
 
-+ Reproducibility should drive any ENM workflow
-+ Metadata are really useful - and necessary
-+ Any ENM workflow should be easily adapted to HPC
-+ Flexibility to start and leave at any step is essential to guarantee a solid evaluation of ENMs
-+ It is not a problem to have one more package if it integrates with other packages
+```{r, out.width=600}
+knitr::include_graphics("figs/feng.png")
+```
 
 ---
 ## final remarks
 
-+ Invest in:
-  + learning script-based applications (programming)
-  + version control (git)
-+ Use tools for environment reproducibility (__Renv__ package, Docker containers)
++ Reproducibility should drive any ENM workflow
+
+--
+
++ Metadata are really useful - and necessary
+
+--
+
++ Any ENM workflow should be easily adapted to HPC
++ Flexibility to start and leave at any step is essential to guarantee the communication with other packages and the fleibility that different projects require
+
+--
+
++ It is not a problem to have one more package if it integrates well with other packages
+
+---
+## To improve reproducibility:
+
++ Use script-based applications (programming languages)
+
+--
+
++ Version control (git)
+
+--
+
++ Use tools for environment reproducibility: __Renv__ package, Docker containers
+
+---
+class: middle, center
+
+# ¡Gracias!
+
+
+`r fontawesome::fa("twitter")` [@SanchezTapiaA](https://twitter.com/SanchezTapiaA)
+`r fontawesome::fa("twitter")` [@MortaraSara](https://twitter.com/MortaraSara)
+`r fontawesome::fa("twitter")` [@FelipeSMBarros](https://twitter.com/FelipeSMBarros)
+
+`r fontawesome::fa("github")` [modleR](https://model-r.github.io/modleR/index.html)

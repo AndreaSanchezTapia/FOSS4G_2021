@@ -103,25 +103,47 @@ knitr::include_graphics("figs/mari.jpeg")
 ]
 
 ---
+background-image: url("https://the-turing-way.netlify.app/_static/logo.jpg")
+background-position: 4% 4%
+background-size: 200px
 
-### Modelos de nicho ecológico o de distribución potencial de especies (ENM, SDM)
+
+.right[
+### https://the-turing-way.netlify.app/welcome
+]
+
+<br>
+<br>
+<br>
+<br>
++ [Investigación abierta](https://the-turing-way.netlify.app/reproducible-research/open.html): reproducible, transparente, reutilizable, colaborativa, responsable, accesible a la sociedad
++ [Reproducibilidad](https://the-turing-way.netlify.app/reproducible-research/reproducible-research.html):
+datos y código disponibles para volver a rodar los análisis
+
+---
+## Modelos de nicho ecológico o de distribución potencial de especies (ENM, SDM)
 
 + __Aprendizaje estadístico__ aplicado a la preducción de áreas potencialmente adecuadas para la presencia de especies
+
 --
 
   + Datos de ocurrencia de las especies (bases de dados de colecciones)
+
 --
 
   + Variables predictoras ambientales (Worldclim, sensoriamiento remoto)
+
 --
 
   + Diferentes algoritmos (GLM, SVM, Bosques aleatorios, árboles de clasificación, GBM)
+
 --
 
   + Desempeño de modelos (partición de los datos en conjunto de entrenamiento y test + métricas de desempeño)
+
 --
 
-+ Primeras implementaciones: código oculto, uso interactivo con el ratón (_"point-and-click"_)
++ Primeras implementaciones: código oculto, uso interactivo con el ratón
 
 ---
 background-image: url("https://www.r-project.org/Rlogo.png")
@@ -153,15 +175,6 @@ background-size: 200px
 
 #### Dificultad con escalabilidad, repetición de código, documentación de decisiones... .purple[no reproducilibidad]
 
----
-background-image: url("https://the-turing-way.netlify.app/_static/logo.jpg")
-background-position: 4% 4%
-background-size: 150px
-class: middle
-
-+ [Investigación abierta](https://the-turing-way.netlify.app/reproducible-research/open.html): reproducible, transparente, reutilizable, colaborativa, responsable, accesible a la sociedad
-+ [Reproducibilidad](https://the-turing-way.netlify.app/reproducible-research/reproducible-research.html):
-datos y código disponibles para volver a rodar los análisis
 
 ---
 background-image: url("figs/modleR.png")
@@ -173,6 +186,9 @@ background-size: 150px
 <br>
 <br>
 <br>
+
+- https://model-r.github.io/modleR/index.html
+--
 
 - Un .purple[flujo de trabajo] desarrollado para __integrar y automatizar__ algunos de los pasos comunes en el modelamiento de nichos ecológicos
 --
@@ -207,28 +223,44 @@ knitr::include_graphics("figs/WORKFLOW.png")
 ---
 ## 1. `setup_sdmdata()`: preparación de datos
 
-Preparación y limpieza de datos debe realizarse previamente
 
-- Limpieza de datos: datos duplicados, NA y una ocurrencia por píxel
+- Limpieza de datos: datos duplicados, NA y una ocurrencia por píxel (¡No excluye la necesidad de preparar y limpiar datos previamente!)
+
+--
+
 - Diseño experimental: *bootstrap*, validación cruzada
+
+--
+
 - Muestreo de pseudo-ausencias
+
+--
+
 - Control de correlación de variables hasta un valor definido por el usuarie (p. ej., 0,8)
-
----
-## muestreo de pseudo-ausencias
-
-```{r, out.width=800, fig.align="center"}
-knitr::include_graphics("figs/fig04_buffer.png")
-```
 
 ---
 ## 2. `do_(m)any()`: ajuste y proyección del modelo
 
 - `do_any()` para un algoritmo y partición (ej. `algo = "maxent"`)
+
+--
+
 - `do_many()` llama a `do_any()` para ajustar múltiples algoritmos (ej. `bioclim = TRUE`, `maxent = TRUE`)
+
+--
+
 - Parametrización
+
+--
+
 - Algoritmos: dismo, maxnet, GLM, SVM, bosques aleatorios, boosted regression trees (BRT)
+
+--
+
 - Proyección a diferentes conjuntos de datos (en el tiempo o el espacio)
+
+--
+
 - Devuelve una tabla con estadísticas de desempeño `->` TSS, AUC, pROC, FNR, Jaccard
 
 
@@ -246,20 +278,20 @@ _Abarema langsdorffii_, tres particiones, bosques aleatorios
 ---
 ## 3. `final_model()`: un modelo por algoritmo por especie
 
-- lo básico: una medida de tendencia central e incertidumbre entre particiones
-- ¿qué modelos unir? (el modelo continuo sin procesar, el binario)
-- algunas operaciones adicionales: consenso entre modelos binarios
-- incertidumbre: rango (max-min) entre particiones
 
----
-## 3. `final_model()`: un modelo por algoritmo por especie
+- Lo básico: una medida de tendencia central e incertidumbre entre particiones
 
+--
 
-.center[
-```{r, out.width=400}
-knitr::include_graphics("figs/fig05_finalmodel.png")
-```
-]
+- ¿Qué modelos unir? (el modelo continuo sin procesar, el binario)
+
+--
+
+- Algunas operaciones adicionales: consenso entre modelos binarios
+
+--
+
+- Incertidumbre: rango (max-min) entre particiones
 
 ---
 ## 3. `final_model()`: un modelo por algoritmo por especie
@@ -271,18 +303,33 @@ knitr::include_graphics("figs/modleR/Abarema_langsdorffii_rf_bin_consensus.png")
 knitr::include_graphics("figs/modleR/Abarema_langsdorffii_rf_raw_uncertainty.png")
 ```
 
-Media de los modelos brutos
-Consenso de los modelos binarios
-Incertidumbre (rango)
+1. Media de los modelos brutos
+2. Consenso de los modelos binarios
+3. Incertidumbre (rango)
 
 ---
 ## 4. `ensemble_model()` - consenso entre algoritmos
 
 - Media entre `final_models()`
+
+--
+
 - Algoritmo de mejor desempeño
+
+--
+
 - PCA entre algoritmos
+
+--
+
 - Métricas de incertidumbre
+
+--
+
 - Los modelos *ensemble* no necesariamente funcionan mejor que los algoritmos individuales (Zhu & Peterson 2017)
+
+--
+
 + Evaluar el desempeño de diferentes métodos de consenso (WIP)
 
 
@@ -290,9 +337,14 @@ Incertidumbre (rango)
 ## estructura de carpetas y portabilidad
 
 .pull-left[
+
 - Un único directorio de trabajo por proyecto
-- Diferentes pasos: diferentes subcarpetas
-- Una estructura de subcarpetas consistente
+
+
+- Una estructura de subcarpetas consistente. Diferentes pasos: diferentes subcarpetas
+
+
+
 - Rutas relativas en lugar de absolutas y no `setwd()`
 ]
 
@@ -306,29 +358,38 @@ knitr::include_graphics("figs/fig03_folder.png")
 ## modularidad
 
 - Cada paso guarda su salida
+
+--
+
 - El siguiente paso lee la salida anterior
-- Usando espacio en disco en lugar de RAM
-- Se puede entrar y salir del flujo de trabajo en cualquier paso
-- Paralelización y uso en marcos computacionales de alto procesamiento / alto rendimiento (HPC / HTC)
 
-```{r}
-knitr::include_graphics("figs/sdmdata_table.png")
-```
+--
 
----
-## reproducibilidad
+- Usando espacio en disco en lugar de RAM:
 
-```{r, out.width=600}
-knitr::include_graphics("figs/feng.png")
-```
+--
+
+  - Permite entrar y salir del flujo de trabajo en cualquier paso
+
+--
+
+  - Paralelización y uso en marcos computacionales de alto procesamiento / alto rendimiento (HPC / HTC)
+
 
 ---
 ## registro detallado de metadatos
 
- - opciones de parametrización
- - información de sesión
- - paquetes utilizados y su versión
+- Opciones de parametrización
 
+--
+
+- Información de sesión
+
+--
+
+- Paquetes utilizados y su versión
+
+--
 
 ```{r, out.width=600}
 knitr::include_graphics("figs/metadata.png")
@@ -344,19 +405,53 @@ knitr::include_graphics("figs/xkcd_standards.png")
 ```
 
 ---
+## reproducibilidad
 
-## final remarks
+```{r, out.width=600}
+knitr::include_graphics("figs/feng.png")
+```
+
+---
+## consideraciones finales
 
 - La reproducibilidad debería impulsar cualquier flujo de trabalho de MNE
+
+--
+
 - Los metadatos son realmente útiles y necesarios
-- Cualquier flujo de trabajo MNE debe adaptarse fácilmente a HPC
-- La flexibilidad para empezar y salir en cualquier paso es fundamental para garantir una evaluación sólida de los ENM
+
+--
+
+- La flexibilidad para empezar y salir en cualquier paso es fundamental para garantizar la comunicación con otros paquetes y la flexibilidad que cada proyecto requiere
+
+--
+
  - No es un problema tener un paquete más si se integra con otros paquetes
 
 ---
-## final remarks
+## Para mejorar la reproducibilidad
 
-+ Invest in:
-  + learning script-based applications (programming)
-  + version control (git)
-+ Use tools for environment reproducibility (__Renv__ package, Docker containers)
+
+
++ Usar aplicaciones basadas en script (lenguajes de programación)
+
+--
+
++ Control de versiones (git)
+
+--
+
++ Herramientas para obtener ambientes reproducibles:  paquete __Renv__, contenedores Docker
+
+---
+class: middle, center
+
+# ¡Gracias!
+
+
+`r fontawesome::fa("twitter")` [@SanchezTapiaA](https://twitter.com/SanchezTapiaA)
+`r fontawesome::fa("twitter")` [@MortaraSara](https://twitter.com/MortaraSara)
+`r fontawesome::fa("twitter")` [@FelipeSMBarros](https://twitter.com/FelipeSMBarros)
+
+`r fontawesome::fa("github")` [modleR](https://model-r.github.io/modleR/index.html)
+
