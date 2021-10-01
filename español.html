@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>español.knit</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Andrea Sánchez-Tapia" />
+    <meta name="date" content="2021-09-30" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="font.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+class: middle
+
+
+
+
+
+<div>
+<style type="text/css">.xaringan-extra-logo {
+width: 300px;
+height: 128px;
+z-index: 0;
+background-image: url(figs/logo.png);
+background-size: contain;
+background-repeat: no-repeat;
+position: absolute;
+bottom:1em;left:88%;
+}
+</style>
+<script>(function () {
+  let tries = 0
+  function addLogo () {
+    if (typeof slideshow === 'undefined') {
+      tries += 1
+      if (tries < 10) {
+        setTimeout(addLogo, 100)
+      }
+    } else {
+      document.querySelectorAll('.remark-slide-content:not(.title-slide):not(.inverse):not(.hide_logo)')
+        .forEach(function (slide) {
+          const logo = document.createElement('div')
+          logo.classList = 'xaringan-extra-logo'
+          logo.href = null
+          slide.appendChild(logo)
+        })
+    }
+  }
+  document.addEventListener('DOMContentLoaded', addLogo)
+})()</script>
+</div>
+
+&lt;style type="text/css"&gt;
+.remark-slide-number {
+  display: none;
+}
+
+&lt;/style&gt;
+
+&lt;br&gt;
+&lt;br&gt;
+&lt;center&gt;
+## Creando flujos de trabajo abiertos y reproducibles para el modelamiento de nichos ecológicos
+
+### Andrea Sánchez-Tapia, Sara Ribeiro Mortara, Felipe Sodré Barros
+&lt;/center&gt;
+&lt;br&gt;
+&lt;br&gt;
+
+
+&lt;img src="figs/logo_liibre.png" width="150" /&gt;
+
+---
+background-image: url("figs/logo_jbrj.png")
+background-position: 98% 2%
+background-size: 100px
+.left-column[
+&lt;img src="figs/andrea.jpg" title="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" alt="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" width="90" style="display: block; margin: auto auto auto 0;" /&gt;&lt;img src="figs/SRM.jpg" title="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" alt="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" width="90" style="display: block; margin: auto auto auto 0;" /&gt;&lt;img src="figs/Felipe_Barros.jpg" title="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" alt="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" width="90" style="display: block; margin: auto auto auto 0;" /&gt;&lt;img src="figs/gui.jpeg" title="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" alt="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" width="90" style="display: block; margin: auto auto auto 0;" /&gt;&lt;img src="figs/diogo.jpeg" title="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" alt="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" width="90" style="display: block; margin: auto auto auto 0;" /&gt;&lt;img src="figs/mari.jpeg" title="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" alt="fotos del equipo: Andrea Sánchez-Tapia, Sara Mortara, Felipe Sodré Barros, Guilherme Gall, Diogo Rocha, y Marinez Ferreira de Siqueira (Investigadora principal)" width="90" style="display: block; margin: auto auto auto 0;" /&gt;
+]
+
+.right-column[ 
+.left[ #### Laboratorio de computación científica y geoprocesamiento del Jardín Botánico de Río de Janeiro]
+#### ¡liibre! Laboratorio Independiente de Informática de la Biodiversidad y Reproducibilidad en Ecología
+
+
++ Informática de la biodiversidad, MNE, ciencia abierta, reproducibilidad
++ Flujos de trabajo científicos basados en R para descarga y limpieza de datos, verificación taxonómica
++ Soporte a proyectos de investigación que utilizan informática de la biodiversidad (e.g., CNCFlora - autoridad UICN para la Flora de Brasil)
+]
+
+
+---
+
+Reproducibility: 
+"data and code being available to fully rerun the analysis" -- _The Turing Way_
+
+---
+
++ Version control
++ Reproducible computational environments:
+many levels: package version awareness, controllers: Renv, containers: Docker
+
+---
+## why build an ENM package?
+
++ Usabilidad 
++ Calidad 
++ Estilo
++ Documentación
++ Qué gap llena?
++ En qué mejora flujos previos?
+
+necesitábamos un flujo de trabajo
+
+---
+## ¿por qué crear un paquete de MNE?
+
+- Comenzamos con un conjunto de scripts de específico del proyecto para ejecutar MNE para especies en el Bosque Atlántico brasileño
+- Otros proyectos: estructura similar pero flexibilidad necesaria según la pregunta de investigación
+- Varias opciones dentro de R
+
+  - GIS with __raster__, __sp__, __maps__, __rgdal__, __sf__
+- Established packages such as __dismo__ (Hijmans et al 2017), __BIOMOD2__ (Thuiller et al 2007)
+- otros paquetes: **ENMeval** (Muscarella et al 2014), **sdm** (Naimi &amp; Araujo 2016), **spThin** (Aiello-Lammens et al 2015), **zoon** (Golding et al. 2018), **wallace** (Kass et al 2018), **kuenm** (Cobos et al 2019), **occCite** (Lowens 2020)
+
+
+__Necesitábamos un flujo de trabajo en lugar de paquetes de R independientes__
+
+---
+
+## estructura de carpetas y portabilidad
+
+.pull-left[
+- Un único directorio de trabajo por proyecto
+- Diferentes pasos: diferentes subcarpetas
+- Una estructura de subcarpetas consistente
+- Rutas relativas en lugar de absolutas y no `setwd()`
+]
+
+.pull-right[ 
+&lt;img src="figs/fig03_folder.png" width="772" /&gt;
+]
+
+---
+## modularidad
+
+- Cada paso guarda su salida
+- El siguiente paso lee la salida anterior
+- Usando espacio HD en lugar de RAM
+- Se puede entrar y salir del flujo de trabajo en cualquier paso
+- Paralelización y uso en marcos computacionales de alto procesamiento / alto rendimiento (HPC / HTC)
+
+---
+## reproducibilidad
+&lt;img src="figs/feng.png" width="600" /&gt;
+
+---
+## registro de metadatos
+ - opciones de parametrización
+ - información de sesión
+ - paquetes utilizados y su versión
+  
+---
+## interoperabilidad
+
+No creamos nuevas clases o métodos: comunicación con otros paquetes de R
+
+&lt;img src="figs/xkcd_standards.png" title="cómic de xkcd: título: ¿cómo proliferan los estándares? subtítulo: (ver: cargadores de corriente alternativa A/C, codificación de caracteres, mensajería instantánea, etc.) Primer cuadro: Situación: Hay 14 estándares compitiendo. Segundo cuadro: dos figuras humanas. Persona 1: '¿14? ¡Ridículo! Necesitamos desarrollar un estándar universal que cubra todos los casos de uso' Persona 2: '¡sí!'. Tercer cuadro: Pronto: Situación: Hay 15 estándares compitiendo" alt="cómic de xkcd: título: ¿cómo proliferan los estándares? subtítulo: (ver: cargadores de corriente alternativa A/C, codificación de caracteres, mensajería instantánea, etc.) Primer cuadro: Situación: Hay 14 estándares compitiendo. Segundo cuadro: dos figuras humanas. Persona 1: '¿14? ¡Ridículo! Necesitamos desarrollar un estándar universal que cubra todos los casos de uso' Persona 2: '¡sí!'. Tercer cuadro: Pronto: Situación: Hay 15 estándares compitiendo" width="719" /&gt;
+
+---
+## modleR
+
+Un flujo de trabajo desarrollado para automatizar algunos de los pasos comunes en el modelamiento de nichos ecológicos
+  
+&lt;img src="figs/modleR.png" width="150" /&gt;
+
+
+---
+## un flujo de trabajo en cuatro pasos
+
++ `setup_sdmdata()`: configuración de datos
++ `do_any()` and `do_many()`: ajuste, proyección y evaluación del modelo
++ `final_model()`: uniendo particiones
++ `ensemble_model()`: consenso entre algoritmos
+
+---
+## un flujo de trabajo en cuatro pasos
+
+.center[
+&lt;img src="figs/fig02_partition_to_ensemble.png" title="esquema del flujo de trabajo. en el primer paso cada algoritmo genera varias particiones, con variación entre ellas debido a la diferencia en los conjuntos de entrenamiento y test. el modelo final junta esas particiones de diferentes maneras, generando un modelo por algoritmo. el tercer paso sería hacer analizar el consenso entre algoritmos, en el paso que denominamos 'ensemble modelling' para obtener un único modelo a partir de todos los algoritmos y conjuntos de entrenamiento" alt="esquema del flujo de trabajo. en el primer paso cada algoritmo genera varias particiones, con variación entre ellas debido a la diferencia en los conjuntos de entrenamiento y test. el modelo final junta esas particiones de diferentes maneras, generando un modelo por algoritmo. el tercer paso sería hacer analizar el consenso entre algoritmos, en el paso que denominamos 'ensemble modelling' para obtener un único modelo a partir de todos los algoritmos y conjuntos de entrenamiento" width="600" /&gt;
+]
+
+---
+## un flujo de trabajo en cuatro pasos
+
+.center[
+&lt;img src="figs/fig01_workflow.jpg" width="600" /&gt;
+]
+
+---
+## paso 1 `setup_sdmdata()`: preparación de datos
+
+Preparación y limpieza de datos debe realizarse previamente
+
+- Comprobaciones de limpieza de datos opcionales: datos duplicados, NA y una ocurrencia por píxel
+- Diseño experimental: *bootstrap*, validación cruzada
+- Muestreo de pseudo-ausencia
+- Control de correlación de variables hasta un valor definido por el usuario (p. ej., 0,8)
+
+---
+## muestreo de pseudo-ausencias
+
+&lt;img src="figs/fig04_buffer.png" width="800" style="display: block; margin: auto;" /&gt;
+
+---
+## muestreo de pseudo-ausencias
+
+&lt;img src="figs/buffer/1_no_buffer.png" width="200" /&gt;&lt;img src="figs/buffer/meandist_and_mindist.png" width="200" /&gt;&lt;img src="figs/buffer/usr_shape_and_mindist.png" width="200" /&gt;
+
++ sin búfer
++ búfer de distancia media y filtro de distancia euclidiana
++ búfer definido por le usuarie (M) y filtro de distancia euclidiana
+
+
+---
+## `setup_sdmdata()` output
+
+Al final de la configuración de datos:
+
+- metadatos e información de sesión
+- crea data.frame sdmdata.csv que se utilizará en el siguiente paso
+
+
+&lt;img src="figs/sdmdata_table.png" width="600" /&gt;&lt;img src="figs/metadata.png" width="600" /&gt;
+
+---
+## paso 2. `do_(m)any()`: ajuste y proyección del modelo
+
+
+&lt;img src="figs/fig01_workflow.jpg" width="600" /&gt;
+
+---
+##  paso 2. `do_(m)any()`: ajuste y proyección del modelo
+
+- `do_any()` para un algoritmo y partición (ej. `algo = "maxent"`)
+- `do_many()` llama a `do_any()` para ajustar múltiples algoritmos (ej. `bioclim = TRUE`, `maxent = TRUE`)
+- Parametrización
+- Se puede aplicar una máscara definida por le usuarie
+- Proyección a diferentes conjuntos de datos (en el tiempo o el espacio)
+- Devuelve una tabla con estadísticas de desempeño --&gt; TSS, AUC, pROC, FNR, Jaccard 
+
+
+---
+## `do_(m)any()`: model fitting and projection
+
+Algoritmos actuales:
+
+- bioclim, mahalanobis distance, maxent en el paquete **dismo**
+- Boosted Regression Trees(BRT) implementados por la función `gbm.step()` del paquete **dismo**
+- maxent del paquete **maxnet**
+- GLM de base R, implementado con un enfoque de selección paso a paso
+- Support Vector Machines (SVM) de los paquetes **kernlab** y **e1071**
+- Random Forest del paquete **randomForest**
+
+
+---
+## salida de `do_(m)any()`
+
+Al final de la etapa de ajuste del modelo:
+
+- Salidas en el disco duro: .tif, .png para cada partición
+- data.frame de evaluación con las estadísticas de desempeño en diferentes umbrales
+- Metadatos e información de sesión
+
+
+---
+## salida de `do_(m)any()` (un modelo ajustado por partición)
+
+&lt;img src="figs/modleR/rf_cont_Abarema_langsdorffii_1_1.png" width="300" /&gt;&lt;img src="figs/modleR/rf_cont_Abarema_langsdorffii_1_2.png" width="300" /&gt;&lt;img src="figs/modleR/rf_cont_Abarema_langsdorffii_1_3.png" width="300" /&gt;
+
+_Abarema langsdorffii_, tres particiones, bosques aleatorios
+
+---
+## paso 3. `final_model()`: un modelo por algoritmo por especie
+    
+&lt;img src="figs/fig01_workflow.jpg" width="600" /&gt;
+
+---
+## paso 3. `final_model()`: un modelo por algoritmo por especie
+
+
+- lo básico: una medida de tendencia central e incertidumbre entre particiones
+- ¿qué modelos unir? (el modelo continuo sin procesar, el binario)
+- algunas operaciones adicionales: consenso entre modelos binarios 
+- incertidumbre: rango (max-min) entre particiones
+
+---
+## paso 3. `final_model()`: un modelo por algoritmo por especie
+
+
+.right-column[
+&lt;img src="figs/fig05_finalmodel.png" width="400" /&gt;
+]
+
+---
+## paso 3. `final_model()`: un modelo por algoritmo por especie
+
+
+&lt;img src="figs/modleR/Abarema_langsdorffii_rf_raw_mean.png" width="300" /&gt;&lt;img src="figs/modleR/Abarema_langsdorffii_rf_bin_consensus.png" width="300" /&gt;&lt;img src="figs/modleR/Abarema_langsdorffii_rf_raw_uncertainty.png" width="300" /&gt;
+
+Raw mean
+Binary consensus
+Uncertainty (range)
+
+---
+## paso 4. `ensemble_model()` - consenso entre algoritmos
+
+&lt;img src="figs/fig01_workflow.jpg" width="1344" /&gt;
+
+
+---
+## paso 4. `ensemble_model()` - consenso entre algoritmos
+
+- Media entre `final_models()`
+- Consenso
+- Algoritmo de mejor desempeño
+- PCA entre algoritmos
+- Métricas de incertidumbre
+- Los modelos *ensemble* no necesariamente funcionan mejor que los algoritmos individuales (Zhu &amp; Peterson 2017)
++ Evaluar el desempeño de diferentes métodos de consenso (WIP)
+
+---
+## final remarks
+
+- La reproducibilidad debería impulsar cualquier flujo de trabalho de MNE
+ - Los metadatos son realmente útiles y necesarios
+ - Cualquier flujo de trabajo MNE debe adaptarse fácilmente a HPC
+ - La flexibilidad para empezar y salir en cualquier paso es fundamental para garantir una evaluación sólida de los ENM
+ - No es un problema tener un paquete más si se integra con otros paquetes
+
+figs/biorxiv.png
+figs/preprint.png
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": "none",
+"seal": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
