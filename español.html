@@ -112,7 +112,7 @@ background-size: 200px
 datos y código disponibles para volver a rodar los análisis
 
 ---
-## Modelos de nicho ecológico o de distribución potencial de especies (ENM, SDM)
+## modelos de nicho ecológico o de distribución potencial de especies (ENM, SDM)
 
 + __Aprendizaje estadístico__ aplicado a la preducción de áreas potencialmente adecuadas para la presencia de especies
 
@@ -315,16 +315,20 @@ _Abarema langsdorffii_, tres particiones, bosques aleatorios
 
 
 ---
+class: center, middle
+
+# modleR fue escrito para implementar buenas prácticas en computación científica
+
+---
 ## estructura de carpetas y portabilidad
 
 .pull-left[
 
 - Un único directorio de trabajo por proyecto
 
+- Una estructura de subcarpetas consistente.
 
-- Una estructura de subcarpetas consistente. Diferentes pasos: diferentes subcarpetas
-
-
+- Diferentes pasos: diferentes subcarpetas
 
 - Rutas relativas en lugar de absolutas y no `setwd()`
 ]
@@ -391,30 +395,20 @@ No creamos nuevas clases o métodos: comunicación con otros paquetes de R
 
 --
 
-- Los metadatos son realmente útiles y necesarios
+- Los __metadatos__ son realmente útiles y necesarios
 
 --
 
-- La flexibilidad para empezar y salir en cualquier paso es fundamental para garantizar la comunicación con otros paquetes y la flexibilidad que cada proyecto requiere
+- __Escalabilidad__: un flujo adaptado para paralelización y alto desempeño
 
 --
 
- - No es un problema tener un paquete más si se integra con otros paquetes
-
----
-## Para mejorar la reproducibilidad
-
-
-
-+ Usar aplicaciones basadas en script (lenguajes de programación)
+- La __flexibilidad__ para empezar y salir en cualquier paso es fundamental para garantizar la comunicación con otros paquetes y los requerimientos de cada proyecto
 
 --
 
-+ Control de versiones (git)
+- Parte de un grupo mayor de paquetes de R en el área: esfuerzos de __integración__
 
---
-
-+ Herramientas para obtener ambientes reproducibles:  paquete __Renv__, contenedores Docker
 
 ---
 class: middle, center

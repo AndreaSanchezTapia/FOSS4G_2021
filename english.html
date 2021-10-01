@@ -112,14 +112,16 @@ background-size: 200px
 data and code being available to fully rerun the analysis
 
 ---
-### Ecological niche modeling or species distribution modeling (ENM, SDM)
+## ecological niche modeling or species distribution modeling (ENM, SDM)
 
 + __Stastistical learning__ applied to the prediction of areas potentially suitable for the presence of a species
 
 --
+
   + Species occurrence data (collection data bases, GBIF)
 
 --
+
   + Environmental predictor variables  (Worldclim, remote sensing)
 
 --
@@ -270,6 +272,7 @@ _Abarema langsdorffii_, three partitions, randomForests
 --
 
 + Some additional operations: consensus between binary models
+
 --
 
 + Uncertainty: range (max - min) between partitions
@@ -313,6 +316,10 @@ _Abarema langsdorffii_, three partitions, randomForests
 
 + Evaluate different ensemble model performance (WIP)
 
+---
+class: center, middle
+
+# modleR was written to implement good practices in scientific computation
 
 ---
 ## folder structure and portability
@@ -392,29 +399,20 @@ We did not create new classes or methods: communication with other packages in t
 
 --
 
-+ Metadata are really useful - and necessary
++ __Metadata__ are really useful - and necessary
 
 --
 
-+ Any ENM workflow should be easily adapted to HPC
-+ Flexibility to start and leave at any step is essential to guarantee the communication with other packages and the fleibility that different projects require
++ __Scalability__: Any ENM workflow should be easily adapted to HPC
 
 --
 
-+ It is not a problem to have one more package if it integrates well with other packages
-
----
-## To improve reproducibility:
-
-+ Use script-based applications (programming languages)
++ __Flexibility__ to start and leave at any step is essential to guarantee the communication with other packages and the requirements of different projects
 
 --
 
-+ Version control (git)
++ Part of a larger group of R packages in the area: efforts for __integration__
 
---
-
-+ Use tools for environment reproducibility: __Renv__ package, Docker containers
 
 ---
 class: middle, center
