@@ -1,7 +1,7 @@
 ---
 title: ""
-subtitle: "FOSS4G 2021"  
-author: 
+subtitle: "FOSS4G 2021"
+author:
   - "Andrea Sánchez-Tapia"
 date: '`r Sys.Date()`'
 output:
@@ -55,7 +55,6 @@ use_logo(
 .remark-slide-number {
   display: none;
 }
-
 ```
 
 <br>
@@ -88,7 +87,7 @@ knitr::include_graphics("figs/mari.jpeg")
 ```
 ]
 
-.right-column[ 
+.right-column[
 .left[ #### Laboratorio de computación científica y geoprocesamiento del Jardín Botánico de Río de Janeiro]
 #### ¡liibre! Laboratorio Independiente de Informática de la Biodiversidad y Reproducibilidad en Ecología
 
@@ -101,7 +100,7 @@ knitr::include_graphics("figs/mari.jpeg")
 
 ---
 
-Reproducibility: 
+Reproducibility:
 "data and code being available to fully rerun the analysis" -- _The Turing Way_
 
 ---
@@ -113,8 +112,8 @@ many levels: package version awareness, controllers: Renv, containers: Docker
 ---
 ## why build an ENM package?
 
-+ Usabilidad 
-+ Calidad 
++ Usabilidad
++ Calidad
 + Estilo
 + Documentación
 + Qué gap llena?
@@ -129,15 +128,14 @@ necesitábamos un flujo de trabajo
 - Otros proyectos: estructura similar pero flexibilidad necesaria según la pregunta de investigación
 - Varias opciones dentro de R
 
-  - GIS with __raster__, __sp__, __maps__, __rgdal__, __sf__
-- Established packages such as __dismo__ (Hijmans et al 2017), __BIOMOD2__ (Thuiller et al 2007)
-- otros paquetes: **ENMeval** (Muscarella et al 2014), **sdm** (Naimi & Araujo 2016), **spThin** (Aiello-Lammens et al 2015), **zoon** (Golding et al. 2018), **wallace** (Kass et al 2018), **kuenm** (Cobos et al 2019), **occCite** (Lowens 2020)
+  - SIG con __raster__, __sp__, __maps__, __rgdal__, __sf__
+  - Paquetes reconocidos como __dismo__ (Hijmans et al 2017), __BIOMOD2__ (Thuiller et al 2007)
+  - Otros paquetes: **ENMeval** (Muscarella et al 2014), **sdm** (Naimi & Araujo 2016), **spThin** (Aiello-Lammens et al 2015), **zoon** (Golding et al. 2018), **wallace** (Kass et al 2018), **kuenm** (Cobos et al 2019), **occCite** (Lowens 2020)
 
 
 __Necesitábamos un flujo de trabajo en lugar de paquetes de R independientes__
 
 ---
-
 ## estructura de carpetas y portabilidad
 
 .pull-left[
@@ -147,7 +145,7 @@ __Necesitábamos un flujo de trabajo en lugar de paquetes de R independientes__
 - Rutas relativas en lugar de absolutas y no `setwd()`
 ]
 
-.pull-right[ 
+.pull-right[
 ```{r}
 knitr::include_graphics("figs/fig03_folder.png")
 ```
@@ -158,22 +156,24 @@ knitr::include_graphics("figs/fig03_folder.png")
 
 - Cada paso guarda su salida
 - El siguiente paso lee la salida anterior
-- Usando espacio HD en lugar de RAM
+- Usando espacio en disco en lugar de RAM
 - Se puede entrar y salir del flujo de trabajo en cualquier paso
 - Paralelización y uso en marcos computacionales de alto procesamiento / alto rendimiento (HPC / HTC)
 
 ---
 ## reproducibilidad
+
 ```{r, out.width=600}
 knitr::include_graphics("figs/feng.png")
 ```
 
 ---
-## registro de metadatos
+## registro detallado de metadatos
+
  - opciones de parametrización
  - información de sesión
  - paquetes utilizados y su versión
-  
+
 ---
 ## interoperabilidad
 
@@ -187,16 +187,15 @@ knitr::include_graphics("figs/xkcd_standards.png")
 ## modleR
 
 Un flujo de trabajo desarrollado para automatizar algunos de los pasos comunes en el modelamiento de nichos ecológicos
-  
+
 ```{r, out.width=150}
 knitr::include_graphics("figs/modleR.png")
 ```
 
-
 ---
 ## un flujo de trabajo en cuatro pasos
 
-+ `setup_sdmdata()`: configuración de datos
++ `setup_sdmdata()`: configuración de datos, limpieza, partición, selección de pseudoausencias
 + `do_any()` and `do_many()`: ajuste, proyección y evaluación del modelo
 + `final_model()`: uniendo particiones
 + `ensemble_model()`: consenso entre algoritmos
@@ -205,17 +204,8 @@ knitr::include_graphics("figs/modleR.png")
 ## un flujo de trabajo en cuatro pasos
 
 .center[
-```{r, out.width=600, fig.alt="esquema del flujo de trabajo. en el primer paso cada algoritmo genera varias particiones, con variación entre ellas debido a la diferencia en los conjuntos de entrenamiento y test. el modelo final junta esas particiones de diferentes maneras, generando un modelo por algoritmo. el tercer paso sería hacer analizar el consenso entre algoritmos, en el paso que denominamos 'ensemble modelling' para obtener un único modelo a partir de todos los algoritmos y conjuntos de entrenamiento"}
-knitr::include_graphics("figs/fig02_partition_to_ensemble.png")
-```
-]
-
----
-## un flujo de trabajo en cuatro pasos
-
-.center[
-```{r, out.width=600}
-knitr::include_graphics("figs/fig01_workflow.jpg")
+```{r, out.width=1000, fig.alt="Esquema del flujo de trabajo. el primer paso limpia y particiona los datos en conjunto de entrenamiento y test, muestrea pseudoausencias y controla la correlación de las variables explicativas. En el segundo paso cada algoritmo genera un modelo por partición, con variación entre ellas debido a la diferencia en los conjuntos de entrenamiento y test. En el tercer paso final_model() junta esas particiones de diferentes maneras, generando un modelo por algoritmo. El cuarto paso analiza el consenso entre algoritmos, en el paso que denominamos 'ensemble modeling', para obtener un único modelo por especie"}
+knitr::include_graphics("figs/WORKFLOW.png")
 ```
 ]
 
@@ -267,21 +257,12 @@ knitr::include_graphics("figs/metadata.png")
 ---
 ## paso 2. `do_(m)any()`: ajuste y proyección del modelo
 
-
-```{r, out.width=600}
-knitr::include_graphics("figs/fig01_workflow.jpg")
-```
-
----
-##  paso 2. `do_(m)any()`: ajuste y proyección del modelo
-
 - `do_any()` para un algoritmo y partición (ej. `algo = "maxent"`)
 - `do_many()` llama a `do_any()` para ajustar múltiples algoritmos (ej. `bioclim = TRUE`, `maxent = TRUE`)
 - Parametrización
 - Se puede aplicar una máscara definida por le usuarie
 - Proyección a diferentes conjuntos de datos (en el tiempo o el espacio)
-- Devuelve una tabla con estadísticas de desempeño --> TSS, AUC, pROC, FNR, Jaccard 
-
+- Devuelve una tabla con estadísticas de desempeño --> TSS, AUC, pROC, FNR, Jaccard
 
 ---
 ## `do_(m)any()`: model fitting and projection
@@ -295,7 +276,6 @@ Algoritmos actuales:
 - Support Vector Machines (SVM) de los paquetes **kernlab** y **e1071**
 - Random Forest del paquete **randomForest**
 
-
 ---
 ## salida de `do_(m)any()`
 
@@ -304,7 +284,6 @@ Al final de la etapa de ajuste del modelo:
 - Salidas en el disco duro: .tif, .png para cada partición
 - data.frame de evaluación con las estadísticas de desempeño en diferentes umbrales
 - Metadatos e información de sesión
-
 
 ---
 ## salida de `do_(m)any()` (un modelo ajustado por partición)
@@ -319,25 +298,17 @@ _Abarema langsdorffii_, tres particiones, bosques aleatorios
 
 ---
 ## paso 3. `final_model()`: un modelo por algoritmo por especie
-    
-```{r, out.width=600}
-knitr::include_graphics("figs/fig01_workflow.jpg")
-```
-
----
-## paso 3. `final_model()`: un modelo por algoritmo por especie
-
 
 - lo básico: una medida de tendencia central e incertidumbre entre particiones
 - ¿qué modelos unir? (el modelo continuo sin procesar, el binario)
-- algunas operaciones adicionales: consenso entre modelos binarios 
+- algunas operaciones adicionales: consenso entre modelos binarios
 - incertidumbre: rango (max-min) entre particiones
 
 ---
 ## paso 3. `final_model()`: un modelo por algoritmo por especie
 
 
-.right-column[
+.center[
 ```{r, out.width=400}
 knitr::include_graphics("figs/fig05_finalmodel.png")
 ```
@@ -353,17 +324,9 @@ knitr::include_graphics("figs/modleR/Abarema_langsdorffii_rf_bin_consensus.png")
 knitr::include_graphics("figs/modleR/Abarema_langsdorffii_rf_raw_uncertainty.png")
 ```
 
-Raw mean
-Binary consensus
-Uncertainty (range)
-
----
-## paso 4. `ensemble_model()` - consenso entre algoritmos
-
-```{r, fig.width = 600}
-knitr::include_graphics("figs/fig01_workflow.jpg")
-```
-
+Media de los modelos brutos
+Consenso de los modelos binarios
+Incertidumbre (rango)
 
 ---
 ## paso 4. `ensemble_model()` - consenso entre algoritmos
@@ -380,11 +343,7 @@ knitr::include_graphics("figs/fig01_workflow.jpg")
 ## final remarks
 
 - La reproducibilidad debería impulsar cualquier flujo de trabalho de MNE
- - Los metadatos son realmente útiles y necesarios
- - Cualquier flujo de trabajo MNE debe adaptarse fácilmente a HPC
- - La flexibilidad para empezar y salir en cualquier paso es fundamental para garantir una evaluación sólida de los ENM
+- Los metadatos son realmente útiles y necesarios
+- Cualquier flujo de trabajo MNE debe adaptarse fácilmente a HPC
+- La flexibilidad para empezar y salir en cualquier paso es fundamental para garantir una evaluación sólida de los ENM
  - No es un problema tener un paquete más si se integra con otros paquetes
-
-figs/biorxiv.png
-figs/preprint.png
-

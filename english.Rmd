@@ -1,7 +1,7 @@
 ---
 title: ""
-subtitle: "FOSS4G 2021"  
-author: 
+subtitle: "FOSS4G 2021"
+author:
   - "Andrea Sánchez-Tapia"
 date: '`r Sys.Date()`'
 output:
@@ -55,7 +55,6 @@ use_logo(
 .remark-slide-number {
   display: none;
 }
-
 ```
 
 <br>
@@ -88,7 +87,7 @@ knitr::include_graphics("figs/mari.jpeg")
 ```
 ]
 
-.right-column[ 
+.right-column[
 .left[ #### Scientific Computation Laboratory - Rio de Janeiro Botanical Garden]
 #### ¡liibre! Independent Biodiversity Informatics Laboratory
 
@@ -101,21 +100,20 @@ knitr::include_graphics("figs/mari.jpeg")
 
 ---
 
-
-Reproducibility: 
+Reproducibility:
 "data and code being available to fully rerun the analysis" -- _The Turing Way_
 
 ---
-+ Version control
 
++ Version control
 + Reproducible computational environments:
-lotos of levels: package version awareness, controllers: Renv, containers: Docker
+many levels: package version awareness, controllers: Renv, containers: Docker
 
 ---
-### why build an ENM package?
+## why build an ENM package?
 
-+ Usabilidad 
-+ Calidad 
++ Usabilidad
++ Calidad
 + Estilo
 + Documentación
 + Qué gap llena?
@@ -126,22 +124,15 @@ necesitábamos un flujo de trabajo
 ---
 ## why building an ENM package?
 
-We started with a __project-specific__ set of scripts to execute ENM for species in the Brazilian Atlantic Forest 
-<!-- specific question, specific scripts -->
-Other projects: similar structure but flexibility needed depending on the __research question__
+- We started with a __project-specific__ set of scripts to execute ENM for species in the Brazilian Atlantic Forest
+- Other projects: similar structure but flexibility needed depending on the __research question__
+- Many options within R:
 
-Many options within R:
+  - GIS with __raster__, __sp__, __maps__, __rgdal__, __sf__
+  - Established packages such as __dismo__ (Hijmans et al 2017), __BIOMOD2__ (Thuiller et al 2007)
+  - Other packages: **ENMeval** (Muscarella et al 2014), **sdm** (Naimi & Araujo 2016), **spThin** (Aiello-Lammens et al 2015), **zoon** (Golding et al. 2018), **wallace** (Kass et al 2018), **kuenm** (Cobos et al 2019), **occCite** (Lowens 2020)
 
-- GIS with __raster__, __sp__, __maps__, __rgdal__, __sf__
-- Established packages such as __dismo__ (Hijmans et al 2017), __BIOMOD2__ (Thuiller et al 2007)
-- Other packages
-  + occCite (Lowens 2020)
-  + ENMeval (Muscarella et al 2014),
-  + sdm (Naimi \& Araújo 2016),
-  + spThin (Aiello‐Lammens et al 2015),
-  + zoon (Golding et al. 2018),
-  + wallace (Kass et al 2018),
-  + kuenm (Cobos et al. 2019),
+__We needed a workflow rather than independent R packages__
 
 ---
 ## folder structure and portability
@@ -153,7 +144,7 @@ Many options within R:
 + Relative rather than absolute paths and no `setwd()`
 ]
 
-.pull-right[ 
+.pull-right[
 ```{r}
 knitr::include_graphics("figs/fig03_folder.png")
 ```
@@ -161,6 +152,7 @@ knitr::include_graphics("figs/fig03_folder.png")
 
 ---
 ## modularity
+
 + Each step saves its output
 + The next step reads the previous output
 + Using HD space rather than RAM
@@ -175,17 +167,18 @@ knitr::include_graphics("figs/feng.png")
 ```
 
 ---
-## thorough metadata recording:
+## thorough metadata recording
+
 + parametrization options
 + session information
 + packages used and their version
-  
+
 ---
 ## interoperability
 
 We did not create new classes or methods: communication with other packages in the R environment
-    
-```{r}
+
+```{r, , fig.alt="xkcd comic: title: how standards proliferate: (see a/c chargers, chracater encodings, instant messaging, etc) First frame: Situation: There are 14 competing standards. Second frame: two human figures. Person 1: '14?! Ridiculous! We need to develop one universal standard that covers everyone's use cases'. Person 2: 'Yeah!'. Third frame: Soon: Situation: There are 15 competing standards."}
 knitr::include_graphics("figs/xkcd_standards.png")
 ```
 
@@ -193,14 +186,15 @@ knitr::include_graphics("figs/xkcd_standards.png")
 ## modleR
 
 A workflow developed to automatize some of the common steps in ecological niche modeling
-  
+
 ```{r, out.width=150}
 knitr::include_graphics("figs/modleR.png")
 ```
 
 ---
 ## a four-step workflow
-+ `setup_sdmdata()`: data setup
+
++ `setup_sdmdata()`: data setup, cleaning, partition, pseudoabsence selection
 + `do_any()` and `do_many()`: model fitting, projecting and evaluating
 + `final_model()`: joining partitions
 + `ensemble_model()`: algorithm consensus
@@ -209,23 +203,16 @@ knitr::include_graphics("figs/modleR.png")
 ## a four-step workflow
 
 .center[
-```{r, out.width=600}
-knitr::include_graphics("figs/fig02_partition_to_ensemble.png")
+```{r, out.width=1000, fig.alt="Workflow scheme. The first step cleans and partitions data into training and test sets, samples pseudoabsences and controls for the correlation of explanatory variables. The second step fits an algorithm per partition, for each train and test set. The third step joins partitions, creating a model per algorithm. The fourth step analyzes algorithm consensus -'ensemble modeling', to obtain a unique model per species"}
+knitr::include_graphics("figs/WORKFLOW.png")
 ```
 ]
-
----
-## a four-step workflow
-
-```{r, out.width=600}
-knitr::include_graphics("figs/fig01_workflow.jpg")
-```
-
 
 ---
 ## Step 1 `setup_sdmdata()`: data preparation
 
 Data preparation and cleaning should be performed previously
+
 + Optional data cleaning checks: exact duplicates, NAs and one occurrence per pixel
 + Experimental design: bootstrap, cross-validation
 + Pseudo-absence sampling
@@ -234,7 +221,7 @@ Data preparation and cleaning should be performed previously
 ---
 ## pseudoabsence sampling
 
-```{r, out.width=600}
+```{r, out.width=800, fig.align="center"}
 knitr::include_graphics("figs/fig04_buffer.png")
 ```
 
@@ -246,6 +233,7 @@ knitr::include_graphics("figs/buffer/1_no_buffer.png")
 knitr::include_graphics("figs/buffer/meandist_and_mindist.png")
 knitr::include_graphics("figs/buffer/usr_shape_and_mindist.png")
 ```
+
 + no buffer
 + mean distance buffer and euclidean distance filter
 + user-defined buffer (M) and euclidean distance filter
@@ -253,6 +241,7 @@ knitr::include_graphics("figs/buffer/usr_shape_and_mindist.png")
 
 ---
 ## `setup_sdmdata()` output
+
 At the end of data setup:
 
 + metadata and session information
@@ -265,13 +254,6 @@ knitr::include_graphics("figs/metadata.png")
 
 ---
 ## Step 2. `do_(m)any()`: model fitting and projection
-
-```{r, out.width=600}
-knitr::include_graphics("figs/fig01_workflow.jpg")
-```
-
----
-##  `do_(m)any()`: model fitting and projection
 
 + `do_any()` for one algorithm and partition (ex. `algo = "maxent"`)
 + `do_many()` calls `do_any()` to fit multiple algorithms (ex: `bioclim = TRUE`, `maxent = TRUE`)
@@ -294,6 +276,7 @@ Current algorithms:
 
 ---
 ## `do_(m)any()` output
+
 At the end of the model fitting stage:
 
 + Outputs in the hard disk: .tif, .png for each partition
@@ -313,13 +296,6 @@ _Abarema langsdorffii_, three partitions, randomForests
 
 ---
 ## Step 3. `final_model()`: a model per algorithm per species
-    
-```{r, out.width=600}
-knitr::include_graphics("figs/fig01_workflow.jpg")
-```
-
----
-## `final_model()`: a model per algorithm per species
 
 + The basics: a central tendency measure and uncertainty between partitions
 + Which models to join? (the raw continuous model, the binary)
@@ -331,9 +307,11 @@ knitr::include_graphics("figs/fig01_workflow.jpg")
 ---
 ## `final_model()`: a model per algorithm per species
 
-```{r, out.width=600}
+.center[
+```{r, out.width=400}
 knitr::include_graphics("figs/fig05_finalmodel.png")
 ```
+]
 
 ---
 ## `final_model()`: a model per algorithm per species
@@ -351,11 +329,6 @@ Uncertainty (range)
 ---
 ## Step 4. `ensemble_model()` - algorithmic consensus
 
-figs/fig01_workflow.pdf
-
----
-## `ensemble_model()`: algorithmic consensus
-
 + Mean between final models
 + Consensus
 + Best-performing algorithm
@@ -365,25 +338,10 @@ figs/fig01_workflow.pdf
 + Evaluate different ensemble model performance (WIP)
 
 ---
-
-## Installing and using modleR
-figs/pkgdown.png
-
----
-## other resources
-## projections https://model-r.github.io/modleR/articles/articles/projection.html
-
-figs/modleR/vignette_projection.png
-
----
 ## final remarks
 
 + Reproducibility should drive any ENM workflow
 + Metadata are really useful - and necessary
 + Any ENM workflow should be easily adapted to HPC
-+ Flexibility to start and leave at any step is essential to guarantee a solid evaluation of ENMs 
-+ decisions and evaluation based on theoretical assumptions
++ Flexibility to start and leave at any step is essential to guarantee a solid evaluation of ENMs
 + It is not a problem to have one more package if it integrates with other packages
-
-figs/biorxiv.png
-figs/preprint.png
